@@ -1,5 +1,6 @@
 import cv2
 import pytesseract
+import re
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
@@ -7,8 +8,8 @@ harcascade = "model/haarcascade_russian_plate_number.xml"
 
 cap = cv2.VideoCapture(0)
 
-cap.set(3, 640)  # width
-cap.set(4, 480)  # height
+cap.set(3, 640)
+cap.set(4, 480)
 
 min_area = 500
 count = 0
@@ -26,16 +27,15 @@ while True:
 
         if area > min_area:
             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
-            # Extracting text using Tesseract OCR on the region of interest (img_roi)
             img_roi = img[y: y + h, x:x + w]
             text = pytesseract.image_to_string(img_roi, config='--psm 8')
-            
-            if text.strip() != '':
-                cleaned_text = ' '.join([word.strip() for word in text.split()])
-                print(f"Detected Plate Number: {cleaned_text}")
 
-            cv2.putText(img, f"{cleaned_text}", (x, y - 5), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255, 0, 255), 2)
+            # Use regex to filter out unwanted characters
+            cleaned_text = re.sub(r'[^a-zA-Z0-9\s]', '', text)
+
+            if cleaned_text.strip() != '':
+                print(f"Detected Plate Number: {cleaned_text}")
+                cv2.putText(img, f"{cleaned_text}", (x, y - 5), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255, 0, 255), 2)
 
             cv2.imshow("ROI", img_roi)
 
