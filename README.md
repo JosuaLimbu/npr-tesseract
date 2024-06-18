@@ -1,6 +1,7 @@
 ## Number Plate Recognition with Optical Character Recognition
 
 This code is open source
+
 Number Plate Recognition (NPR), also known as Automatic Number Plate Recognition (ANPR) or License Plate Recognition (LPR), is a technology used to automatically detect and recognize vehicle license plates. The system uses an optical camera and character recognition (OCR) software to capture images of license plates from passing vehicles, then analyzes the images to recognize and extract the text contained within.
 
 ### Install
